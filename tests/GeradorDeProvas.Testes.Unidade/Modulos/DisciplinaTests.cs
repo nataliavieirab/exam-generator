@@ -18,7 +18,7 @@ public sealed class DisciplinaTests
         // Asserção [Checa o resultado comparando com o esperado]
         Assert.HasCount(1, erros);
         Assert.AreEqual(
-            "O campo \"Nome\" deve conter entre 2 e 100 caracteres.",
+            "O campo \"Nome\" deve ser preenchido.",
             erros.First()
         );
     }
@@ -32,7 +32,7 @@ public sealed class DisciplinaTests
 
         Assert.HasCount(1, erros);
         Assert.AreEqual(
-            "O campo \"Nome\" deve conter entre 2 e 100 caracteres.",
+            "O campo \"Nome\" deve conter no mínimo 2 caracteres.",
             erros.First()
         );
     }
@@ -46,7 +46,7 @@ public sealed class DisciplinaTests
 
         Assert.HasCount(1, erros);
         Assert.AreEqual(
-            "O campo \"Nome\" deve conter entre 2 e 100 caracteres.",
+            "O campo \"Nome\" deve conter no máximo 100 caracteres.",
             erros.First()
         );
     }
