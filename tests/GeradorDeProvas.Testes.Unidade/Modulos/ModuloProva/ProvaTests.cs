@@ -80,7 +80,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, true);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 0, true);
 
         List<string> erros = prova.Validar();
 
@@ -97,7 +97,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, true);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 0, true);
 
         List<string> erros = prova.Validar();
 
@@ -114,7 +114,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, true);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 3, false);
 
         List<string> erros = prova.Validar();
 
