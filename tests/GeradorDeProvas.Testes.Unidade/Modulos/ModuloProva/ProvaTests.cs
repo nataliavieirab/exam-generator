@@ -1,6 +1,7 @@
 using GeradorDeProvas.Dominio.Modulos.ModuloDisciplina;
 using GeradorDeProvas.Dominio.Modulos.ModuloMateria;
 using GeradorDeProvas.Dominio.Modulos.ModuloProva;
+using GeradorDeProvas.Dominio.Modulos.ModuloQuestao;
 
 namespace GeradorDeProvas.Testes.Unidade.Modulos.ModuloProva;
 
@@ -146,5 +147,24 @@ public sealed class ProvaTests
         Assert.IsTrue(prova.ProvaRecuperacao);
         Assert.IsNull(prova.Materia);
         Assert.HasCount(0, prova.Questoes);
+    }
+
+    [TestMethod]
+    public void SortearQuestoes_DeveSelecionar_QuantidadeInformada_SemRepetir()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 8, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 5, false);
+
+        List<Questao> questoesDisponiveis = Enumerable.Range(1, 5)
+            .Select(indice => new Questao($"Questão {indice}", materia, []))
+            .ToList();
+
+        List<string> erros = prova.SortearQuestoes(questoesDisponiveis, new Random(70));
+
+        Assert.IsEmpty(erros);
+        Assert.HasCount(5, prova.Questoes);
+        Assert.HasCount(5, prova.Questoes.Select(q => q.Id).Distinct());
     }
 }
