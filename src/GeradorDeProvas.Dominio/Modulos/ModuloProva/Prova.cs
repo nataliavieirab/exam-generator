@@ -1,0 +1,69 @@
+using GeradorDeProvas.Dominio.Compartilhado;
+using GeradorDeProvas.Dominio.Compartilhado.Identity;
+using GeradorDeProvas.Dominio.Modulos.ModuloDisciplina;
+using GeradorDeProvas.Dominio.Modulos.ModuloMateria;
+using GeradorDeProvas.Dominio.Modulos.ModuloQuestao;
+
+namespace GeradorDeProvas.Dominio.Modulos.ModuloProva;
+
+public sealed class Prova : EntidadeBase<Prova>, IEntidadeDoUsuario
+{
+    public string Titulo { get; set; } = string.Empty;
+    public Disciplina Disciplina { get; set; } = null!;
+    public Materia? Materia { get; set; }
+    public int Serie { get; set; }
+    public int QuantidadeQuestoes { get; set; }
+    public bool ProvaRecuperacao { get; set; }
+    public List<Questao> Questoes { get; set; } = [];
+    public Guid UserId { get; set; }
+
+    public Prova()
+    {
+    }
+
+    public Prova(
+        string titulo,
+        Disciplina disciplina,
+        Materia? materia,
+        int serie,
+        int quantidadeQuestoes,
+        bool provaRecuperacao,
+        List<Questao>? questoes = null
+    ) : this()
+    {
+        Titulo = titulo;
+        Disciplina = disciplina;
+        Materia = materia;
+        Serie = serie;
+        QuantidadeQuestoes = quantidadeQuestoes;
+        ProvaRecuperacao = provaRecuperacao;
+        Questoes = questoes ?? [];
+    }
+
+    public override List<string> Validar()
+    {
+        List<string> erros = [];
+
+        if (string.IsNullOrWhiteSpace(Titulo) || Titulo.Length < 2 || Titulo.Length > 100)
+            erros.Add("O campo \"Título\" deve ser conter entre 2 e 100 caracteres.");
+
+        if (Disciplina is null)
+            erros.Add("O campo \"Disciplina\" deve ser preenchido.");
+
+        if (Serie <= 0)
+            erros.Add("O campo \"Série\" deve ser maior que zero.");
+
+        if (ProvaRecuperacao && Materia is not null)
+            erros.Add("O campo \"Matéria\" não pode ser prenchido em uma prova de recuperação.");
+
+        else if (!ProvaRecuperacao && Materia is not null && !Equals(Materia.Serie, Serie))
+            erros.Add("O campo \"Série\" precisa alinhar com a série da \"Matéria\".");
+
+        return erros;
+    }
+
+    public override void Atualizar(Prova entidadeAtualizada)
+    {
+        throw new NotImplementedException();
+    }
+}

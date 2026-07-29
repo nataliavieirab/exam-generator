@@ -1,0 +1,127 @@
+using GeradorDeProvas.Dominio.Modulos.ModuloDisciplina;
+using GeradorDeProvas.Dominio.Modulos.ModuloMateria;
+using GeradorDeProvas.Dominio.Modulos.ModuloProva;
+
+namespace GeradorDeProvas.Testes.Unidade.Modulos.ModuloProva;
+
+[TestClass]
+public sealed class ProvaTests
+{
+    [TestMethod]
+    public void Validar_SemTitulo_DeveRetornar_ErroCorrespondente()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Algebra", 8, disciplina);
+
+        Prova prova = new Prova(string.Empty, disciplina, materia, 8, 0, false);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Título\" deve ser conter entre 2 e 100 caracteres.",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
+    public void Validar_SemDisciplina_DeveRetornar_ErroCorrespondente()
+    {
+        Materia materia = new Materia("Álgebra", 8, null!);
+
+        Prova prova = new Prova("Prova de Álgebra", null, materia, 8, 0, false);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Disciplina\" deve ser preenchido.",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
+    public void Validar_ComSerieZeroOuAbaixo_DeveRetornar_ErroCorrespondente()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 0, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 0, 0, false);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Série\" deve ser maior que zero.",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
+    public void Validar_ComSerieEMateria_Diferentes_DeveRetornar_ErroCorrespondente()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 8, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, false);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Série\" precisa alinhar com a série da \"Matéria\".",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
+    public void Validar_RecuperacaoComMateria_DeveRetornar_ErroCorrespondente()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 8, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, true);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Matéria\" não pode ser prenchido em uma prova de recuperação.",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
+    public void Validar_QuantidadeQuestoesAbaixoDeUm_DeveRetornar_ErroCorrespondente()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 8, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, true);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O campo \"Quantidade de Questões\" não pode ser zero ou negativo.",
+            erros.First()
+        );
+    }
+
+    [TestMethod]
+    public void Validar_MateriaFora_DaDisciplina_DeveRetornar_ErroCorrespondente()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 8, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, true);
+
+        List<string> erros = prova.Validar();
+
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            "O valor do campo \"Matéria\" deve pertencer à \"Disciplina\" selecionada.",
+            erros.First()
+        );
+    }
+}
