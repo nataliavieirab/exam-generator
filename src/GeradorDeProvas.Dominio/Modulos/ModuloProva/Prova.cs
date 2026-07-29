@@ -59,11 +59,24 @@ public sealed class Prova : EntidadeBase<Prova>, IEntidadeDoUsuario
         else if (!ProvaRecuperacao && Materia is not null && !Equals(Materia.Serie, Serie))
             erros.Add("O campo \"Série\" precisa alinhar com a série da \"Matéria\".");
 
+        if (QuantidadeQuestoes < 1)
+            erros.Add("O campo \"Quantidade de Questões\" não pode ser zero ou negativo.");
+
+        if (!ProvaRecuperacao && Materia is not null && !Equals(Disciplina, Materia.Disciplina))
+            erros.Add("O valor do campo \"Matéria\" deve pertencer à \"Disciplina\" selecionada.");
+
         return erros;
     }
 
     public override void Atualizar(Prova entidadeAtualizada)
     {
-        throw new NotImplementedException();
+        Titulo = entidadeAtualizada.Titulo;
+        Disciplina = entidadeAtualizada.Disciplina;
+        Materia = entidadeAtualizada.Materia;
+        Serie = entidadeAtualizada.Serie;
+        QuantidadeQuestoes = entidadeAtualizada.QuantidadeQuestoes;
+        ProvaRecuperacao = entidadeAtualizada.ProvaRecuperacao;
+
+        Questoes.Clear();
     }
 }

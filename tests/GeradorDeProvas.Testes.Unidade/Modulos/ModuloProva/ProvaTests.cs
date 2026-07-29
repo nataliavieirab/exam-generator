@@ -13,7 +13,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Algebra", 8, disciplina);
 
-        Prova prova = new Prova(string.Empty, disciplina, materia, 8, 0, false);
+        Prova prova = new Prova(string.Empty, disciplina, materia, 8, 1, false);
 
         List<string> erros = prova.Validar();
 
@@ -29,7 +29,7 @@ public sealed class ProvaTests
     {
         Materia materia = new Materia("Álgebra", 8, null!);
 
-        Prova prova = new Prova("Prova de Álgebra", null, materia, 8, 0, false);
+        Prova prova = new Prova("Prova de Álgebra", null, materia, 8, 1, false);
 
         List<string> erros = prova.Validar();
 
@@ -46,7 +46,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 0, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 0, 0, false);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 0, 1, false);
 
         List<string> erros = prova.Validar();
 
@@ -63,7 +63,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 0, false);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 1, false);
 
         List<string> erros = prova.Validar();
 
@@ -80,7 +80,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 0, true);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 1, true);
 
         List<string> erros = prova.Validar();
 
@@ -97,7 +97,7 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 0, true);
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 0, false);
 
         List<string> erros = prova.Validar();
 
@@ -114,7 +114,10 @@ public sealed class ProvaTests
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
-        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 5, 3, false);
+        Disciplina disciplina2 = new Disciplina("Geografia");
+        Materia materia2 = new Materia("Relevo", 8, disciplina2);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia2, 8, 3, false);
 
         List<string> erros = prova.Validar();
 
@@ -123,5 +126,25 @@ public sealed class ProvaTests
             "O valor do campo \"Matéria\" deve pertencer à \"Disciplina\" selecionada.",
             erros.First()
         );
+    }
+
+    [TestMethod]
+    public void Atualizar_AlteraConfiguracaoELimpaQuestoes()
+    {
+        Disciplina disciplina = new Disciplina("Matemática");
+        Materia materia = new Materia("Álgebra", 8, disciplina);
+
+        Prova prova = new Prova("Prova de Álgebra", disciplina, materia, 8, 1, false);
+
+        Disciplina disciplina2 = new Disciplina("Geografia");
+
+        prova.Atualizar(new Prova("Prova de Geografia", disciplina2, null, 6, 3, true));
+
+        Assert.AreEqual("Prova de Geografia", prova.Titulo);
+        Assert.AreEqual(6, prova.Serie);
+        Assert.AreEqual(3, prova.QuantidadeQuestoes);
+        Assert.IsTrue(prova.ProvaRecuperacao);
+        Assert.IsNull(prova.Materia);
+        Assert.HasCount(0, prova.Questoes);
     }
 }
