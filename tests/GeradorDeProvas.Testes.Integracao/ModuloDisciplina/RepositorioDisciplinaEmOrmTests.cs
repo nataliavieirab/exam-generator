@@ -1,7 +1,6 @@
 using FizzWare.NBuilder;
 using GeradorDeProvas.Dominio.Modulos.ModuloDisciplina;
 using GeradorDeProvas.Testes.Integracao.Compartilhado.Orm;
-
 namespace GeradorDeProvas.Testes.Integracao.ModuloDisciplina;
 
 [TestClass]
