@@ -23,10 +23,15 @@ public sealed class RepositorioProvaEmOrmTests
         repositorio = new RepositorioProvaEmOrm(dbContext);
     }
 
+    [TestCleanup]
+    public void LimparContexto()
+    {
+        dbContext.Dispose();
+    }
+
     [TestMethod]
     public void CadastrarESelecionarPorId_CarregaRelacionamentosDaProva()
     {
-
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
@@ -38,12 +43,10 @@ public sealed class RepositorioProvaEmOrmTests
 
         prova.SortearQuestoes(questoesDisponiveis, new Random(70));
 
-
         repositorio.Cadastrar(prova);
         dbContext.ChangeTracker.Clear();
 
         Prova? provaSelecionada = repositorio.SelecionarPorId(prova.Id);
-
 
         Assert.IsNotNull(provaSelecionada);
         Assert.AreEqual("Prova de Álgebra", provaSelecionada.Titulo);
@@ -56,7 +59,6 @@ public sealed class RepositorioProvaEmOrmTests
     [TestMethod]
     public void Editar_AtualizaProvaExistente()
     {
-
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
@@ -72,10 +74,8 @@ public sealed class RepositorioProvaEmOrmTests
 
         Prova provaAtualizada = new Prova("Prova Final", disciplina, null!, 8, 5, true);
 
-
         bool conseguiuEditar = repositorio.Editar(prova.Id, provaAtualizada);
         dbContext.ChangeTracker.Clear();
-
 
         Assert.IsTrue(conseguiuEditar);
         Assert.AreEqual(
@@ -87,7 +87,6 @@ public sealed class RepositorioProvaEmOrmTests
     [TestMethod]
     public void Excluir_RemoveProvaExistente()
     {
-
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
@@ -101,10 +100,8 @@ public sealed class RepositorioProvaEmOrmTests
 
         repositorio.Cadastrar(prova);
 
-
         bool conseguiuExcluir = repositorio.Excluir(prova.Id);
         dbContext.ChangeTracker.Clear();
-
 
         Assert.IsTrue(conseguiuExcluir);
         Assert.IsNull(repositorio.SelecionarPorId(prova.Id));
@@ -113,7 +110,6 @@ public sealed class RepositorioProvaEmOrmTests
     [TestMethod]
     public void SelecionarTodos_RetornaProvasComRelacionamentos()
     {
-
         Disciplina disciplina = new Disciplina("Matemática");
         Materia materia = new Materia("Álgebra", 8, disciplina);
 
@@ -128,9 +124,7 @@ public sealed class RepositorioProvaEmOrmTests
         repositorio.Cadastrar(prova);
         dbContext.ChangeTracker.Clear();
 
-
         List<Prova> provas = repositorio.SelecionarTodos();
-
 
         Assert.HasCount(1, provas);
         Assert.AreEqual("Matemática", provas.First().Disciplina.Nome);
